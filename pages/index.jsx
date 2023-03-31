@@ -56,6 +56,10 @@ export default function Home() {
     ).wait();
   };
 
+  console.log("NEXTAUTH_URL", process.env.NEXTAUTH_URL);
+
+  console.log("APP_DOMAIN", process.env.APP_DOMAIN);
+
   return (
     <div className="max-w-7xl mx-auto px-8">
       <h1 className="text-4xl font-black mt-32">
