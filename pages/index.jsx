@@ -4,17 +4,20 @@ import {
   USDC_ADDRESS,
   USDT_ADDRESS,
 } from "../constants/index";
+import { useEffect, useState } from "react";
 
 import ERC20Json from "../contractsData/ERC20ABI.json";
 import { FaAngleDown } from "react-icons/fa";
 import RNFTDollarDepositJson from "../contractsData/RNFTDollarDepositABI.json";
+import ReactLoading from "react-loading";
 import { ethers } from "ethers";
 import { useSigner } from "wagmi";
-import { useState } from "react";
 
 export default function Home() {
   const { data: signer } = useSigner();
   const [amountValue, setAmountValue] = useState("");
+  const [isLoadingPopup, setIsLoadingPopup] = useState(false);
+  const [isMinted, setIsMinted] = useState(false);
   const [selectedStablecoin, setSelectedStablecoin] = useState("");
 
   const handleAmountValueChange = (event) => {
@@ -26,6 +29,8 @@ export default function Home() {
   };
 
   const handleMintRNFTDClick = async () => {
+    setIsLoadingPopup(true);
+
     const selectedStablecoinContract = new ethers.Contract(
       selectedStablecoin,
       ERC20Json.abi,
@@ -54,7 +59,20 @@ export default function Home() {
         decimals
       )
     ).wait();
+
+    setIsMinted(true);
+    setIsLoadingPopup(false);
   };
+
+  useEffect(() => {
+    if (!isMinted) return;
+
+    const mint = setTimeout(() => {
+      setIsMinted(false);
+    }, 2000);
+
+    return () => clearTimeout(mint);
+  }, [isMinted]);
 
   return (
     <div className="max-w-7xl mx-auto px-8">
@@ -107,7 +125,17 @@ export default function Home() {
               selectedStablecoin === "" || amountValue === "" ? true : false
             }
           >
-            Mint
+            {isLoadingPopup ? (
+              <ReactLoading
+                type={"spinningBubbles"}
+                color="white"
+                className="loading"
+              />
+            ) : isMinted ? (
+              "Minted"
+            ) : (
+              "Mint"
+            )}
           </button>
         </div>
       </div>
