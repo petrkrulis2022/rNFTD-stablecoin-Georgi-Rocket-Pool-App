@@ -5,7 +5,7 @@ export default MoralisNextApi({
   authentication: {
     domain: process.env.APP_DOMAIN,
     statement: "Please sign this message to confirm your identity.",
-    uri: "https://rnftd-stablecoin-app.netlify.app/",
+    uri: process.env.NEXTAUTH_URL,
     timeout: 120,
   },
 });
