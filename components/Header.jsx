@@ -57,6 +57,7 @@ const Header = () => {
       message,
       signature,
       redirect: false,
+      callbackUrl: "/",
     });
 
     push(url);
